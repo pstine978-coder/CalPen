@@ -44,6 +44,7 @@ That's it! The script will:
 - **Masscan**: Fast port scanning
 - **John the Ripper**: Password cracking
 - **Hashcat**: Advanced hash cracking
+- **Metasploit**: Full exploitation framework with session management
 
 ---
 
@@ -106,6 +107,16 @@ python3 main.py
 python3 test_html_report.py
 firefox reports/test_report.html
 ```
+
+### Setup Metasploit Integration (Optional)
+```bash
+bash setup_metasploit.sh
+# Then start msfrpcd in a separate terminal:
+cd mcp_servers/metasploit
+./start_msfrpcd.sh
+```
+
+See `METASPLOIT_MCP.md` for detailed instructions.
 
 ---
 

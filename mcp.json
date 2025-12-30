@@ -97,6 +97,24 @@
         }
       },
       "cache_tools_list": true
+    },
+    {
+      "name": "Metasploit",
+      "params": {
+        "command": "bash",
+        "args": [
+          "-c",
+          "cd mcp_servers/metasploit && source venv/bin/activate && source msf_config.env && python3 MetasploitMCP.py --transport stdio"
+        ],
+        "env": {
+          "MSF_PASSWORD": "calpen123",
+          "MSF_SERVER": "127.0.0.1",
+          "MSF_PORT": "55553",
+          "MSF_SSL": "false",
+          "PAYLOAD_SAVE_DIR": "./mcp_servers/metasploit/payloads"
+        }
+      },
+      "cache_tools_list": true
     }
   ]
 }
