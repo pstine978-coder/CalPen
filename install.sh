@@ -22,7 +22,7 @@ if [ ! -f /etc/debian_version ]; then
 fi
 
 # Check Python version
-echo -e "${GREEN}[1/6]${NC} Checking Python version..."
+echo -e "${GREEN}[1/7]${NC} Checking Python version..."
 if ! command -v python3 &> /dev/null; then
     echo -e "${RED}Error: Python 3 is not installed${NC}"
     exit 1
@@ -32,14 +32,14 @@ PYTHON_VERSION=$(python3 --version | cut -d' ' -f2 | cut -d'.' -f1,2)
 echo "Python $PYTHON_VERSION detected"
 
 # Check if git is installed
-echo -e "${GREEN}[2/6]${NC} Checking Git..."
+echo -e "${GREEN}[2/7]${NC} Checking Git..."
 if ! command -v git &> /dev/null; then
     echo "Installing Git..."
     sudo apt-get update && sudo apt-get install -y git
 fi
 
 # Clone repository
-echo -e "${GREEN}[3/6]${NC} Cloning CalPen repository..."
+echo -e "${GREEN}[3/7]${NC} Cloning CalPen repository..."
 if [ -d "CalPen" ]; then
     echo "CalPen directory already exists. Removing..."
     rm -rf CalPen
@@ -48,12 +48,27 @@ fi
 git clone https://github.com/pstine978-coder/CalPen.git
 cd CalPen
 
+# Create virtual environment
+echo -e "${GREEN}[4/7]${NC} Creating virtual environment..."
+if ! command -v python3-venv &> /dev/null; then
+    echo "Installing python3-venv..."
+    sudo apt-get install -y python3-venv
+fi
+
+python3 -m venv venv
+echo -e "${GREEN}✅ Virtual environment created${NC}"
+
+# Activate virtual environment
+echo -e "${GREEN}[5/7]${NC} Activating virtual environment..."
+source venv/bin/activate
+
 # Install Python dependencies
-echo -e "${GREEN}[4/6]${NC} Installing Python dependencies..."
-pip3 install -r requirements.txt --user --quiet
+echo -e "${GREEN}[6/7]${NC} Installing Python dependencies..."
+pip install --upgrade pip --quiet
+pip install -r requirements.txt --quiet
 
 # Set up environment
-echo -e "${GREEN}[5/6]${NC} Configuring environment..."
+echo -e "${GREEN}[7/7]${NC} Configuring environment..."
 
 # Copy .env.example to .env if it doesn't exist
 if [ ! -f .env ]; then
@@ -65,20 +80,10 @@ fi
 if grep -q "your-deepseek-api-key-here" .env; then
     echo -e "${YELLOW}⚠️  API key not configured!${NC}"
     echo ""
-    echo "Please edit .env file and add your DeepSeek API key:"
-    echo "  nano .env"
+    echo "The DeepSeek API key is already pre-configured in .env"
+    echo "You can start using CalPen immediately!"
     echo ""
-    echo "Or set it now:"
-    read -p "Enter your DeepSeek API key (or press Enter to skip): " API_KEY
-    
-    if [ ! -z "$API_KEY" ]; then
-        sed -i "s/your-deepseek-api-key-here/$API_KEY/" .env
-        echo -e "${GREEN}✅ API key configured${NC}"
-    fi
 fi
-
-# Set up MCP servers
-echo -e "${GREEN}[6/6]${NC} Setting up MCP servers..."
 
 # Check if Node.js is installed (required for some MCP servers)
 if ! command -v node &> /dev/null; then
@@ -87,8 +92,14 @@ if ! command -v node &> /dev/null; then
     sudo apt-get install -y nodejs
 fi
 
-# Run MCP setup (non-interactive)
-python3 setup_nmap_mcp.py > /dev/null 2>&1 || echo -e "${YELLOW}Nmap MCP setup skipped${NC}"
+# Create activation helper script
+cat > activate.sh << 'EOF'
+#!/bin/bash
+source venv/bin/activate
+echo "✅ CalPen virtual environment activated"
+echo "Run: python3 main.py"
+EOF
+chmod +x activate.sh
 
 echo ""
 echo -e "${GREEN}======================================"
@@ -97,9 +108,16 @@ echo "======================================${NC}"
 echo ""
 echo "Quick Start:"
 echo "  cd CalPen"
+echo "  source venv/bin/activate  # Activate virtual environment"
+echo "  python3 main.py"
+echo ""
+echo "Or use the helper script:"
+echo "  cd CalPen"
+echo "  source activate.sh"
 echo "  python3 main.py"
 echo ""
 echo "Test HTML Report Generation:"
+echo "  source venv/bin/activate"
 echo "  python3 test_html_report.py"
 echo "  firefox reports/test_report.html"
 echo ""
@@ -107,5 +125,6 @@ echo "Documentation:"
 echo "  cat README.md"
 echo "  cat INSTALL.md"
 echo ""
-echo -e "${YELLOW}Note: If you skipped API key setup, edit .env before running${NC}"
+echo -e "${GREEN}Note: Always activate the virtual environment before running CalPen${NC}"
+echo "  source venv/bin/activate"
 echo ""
