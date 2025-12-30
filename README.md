@@ -11,7 +11,7 @@ CalPen is a Kali Linux-optimized penetration testing framework that combines AI-
 ## ⚡ Quick Start (One Command)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/CalPen/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/pstine978-coder/CalPen/main/install.sh | bash
 ```
 
 That's it! The script will:
@@ -58,7 +58,7 @@ That's it! The script will:
 
 ```bash
 # Clone repository
-git clone https://github.com/YOUR_USERNAME/CalPen.git
+git clone https://github.com/pstine978-coder/CalPen.git
 cd CalPen
 
 # Install dependencies

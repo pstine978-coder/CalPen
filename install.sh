@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # CalPen - One-Line Installation Script
-# Usage: curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/CalPen/main/install.sh | bash
+# Usage: curl -fsSL https://raw.githubusercontent.com/pstine978-coder/CalPen/main/install.sh | bash
 
 set -e
 
@@ -45,7 +45,7 @@ if [ -d "CalPen" ]; then
     rm -rf CalPen
 fi
 
-git clone https://github.com/YOUR_USERNAME/CalPen.git
+git clone https://github.com/pstine978-coder/CalPen.git
 cd CalPen
 
 # Install Python dependencies
